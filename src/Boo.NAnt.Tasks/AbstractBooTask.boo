@@ -30,9 +30,9 @@ namespace Boo.NAnt
 
 import System
 import System.IO
-import NAnt.Core
+import NAnt.Core 
 import NAnt.Core.Attributes
-import NAnt.Core.Types
+import NAnt.Core.Types 
 import Boo.Lang.Compiler
 
 abstract class AbstractBooTask(Task):

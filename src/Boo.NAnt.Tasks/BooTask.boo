@@ -104,7 +104,7 @@ class BooTask(AbstractBooTask):
 	Code as RawXml:
 		get: return _code
 		set: _code = value
-		
+	
 	[BuildElementArray("arg")]
 	Arguments as ArgumentCollection:
 		get: return _arguments
@@ -117,6 +117,8 @@ class BooTask(AbstractBooTask):
 		if _src:
 			parameters.Input.Add(FileInput(_src.ToString()))
 		else:
+			for scriptInclude in [ arg.ToString().Substring(3) for arg in Arguments if arg.ToString().StartsWith("-i:") ]:
+				parameters.Input.Add(FileInput(scriptInclude))
 			parameters.Input.Add(StringInput("code", ReIndent(SourceCode())))
 		parameters.References.Add(GetType().Assembly)
 		parameters.References.Add(typeof(NAnt.Core.Project).Assembly)
@@ -130,7 +132,7 @@ class BooTask(AbstractBooTask):
 			script.Project = Project
 			script.Task = self
 			WithWorkingDir(Project.BaseDirectory) do:
-				script.Run([arg.ToString() for arg in Arguments].ToArray(string))
+				script.Run([arg.ToString() for arg in Arguments unless arg.ToString().StartsWith("-i:")].ToArray(string))
 		except x:
 			raise BuildException(x.Message, Location, x)
 			
