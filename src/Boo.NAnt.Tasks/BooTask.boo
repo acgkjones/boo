@@ -92,13 +92,20 @@ def WithWorkingDir(dir as string, block as callable()):
 class BooTask(AbstractBooTask):
 
 	_src as FileInfo
+	_libPaths as string = null
 	_code as RawXml
 	_arguments = ArgumentCollection() 
+	_includes = BooIncludeCollection()
 	
 	[TaskAttribute("src", Required: false)]
 	Source:
 		get: return _src
 		set: _src = value
+	
+	[TaskAttribute("libdirs", Required: false)]
+	LibPaths as string:
+		get: return _libPaths
+		set: _libPaths = value
 			
 	[BuildElement("code")]
 	Code as RawXml:
@@ -108,18 +115,29 @@ class BooTask(AbstractBooTask):
 	[BuildElementArray("arg")]
 	Arguments as ArgumentCollection:
 		get: return _arguments
+		
+	[BuildElementArray("include")]
+	Includes as BooIncludeCollection:
+		get: return _includes
 			
 	override def ExecuteTask():
 		
 		compiler = BooCompiler()
 		parameters = compiler.Parameters
 		parameters.OutputType = CompilerOutputType.Library
+		
+		if not string.IsNullOrEmpty(LibPaths):
+			self.LogVerbose("Using Lib Paths: ${LibPaths}")
+			parameters.LibPaths.AddRange( [ path for path in LibPaths.Split(char(',')) unless string.IsNullOrEmpty(path) ] )
+				
 		if _src:
 			parameters.Input.Add(FileInput(_src.ToString()))
 		else:
-			for scriptInclude in [ arg.ToString().Substring(3) for arg in Arguments if arg.ToString().StartsWith("-i:") ]:
-				parameters.Input.Add(FileInput(scriptInclude))
 			parameters.Input.Add(StringInput("code", ReIndent(SourceCode())))
+		
+		for scriptInclude as BooScriptInclude in Includes:
+				parameters.Input.Add(FileInput(scriptInclude.ScriptPath))
+			
 		parameters.References.Add(GetType().Assembly)
 		parameters.References.Add(typeof(NAnt.Core.Project).Assembly)
 		
@@ -132,7 +150,7 @@ class BooTask(AbstractBooTask):
 			script.Project = Project
 			script.Task = self
 			WithWorkingDir(Project.BaseDirectory) do:
-				script.Run([arg.ToString() for arg in Arguments unless arg.ToString().StartsWith("-i:")].ToArray(string))
+				script.Run([arg.ToString() for arg in Arguments].ToArray(string))
 		except x:
 			raise BuildException(x.Message, Location, x)
 			

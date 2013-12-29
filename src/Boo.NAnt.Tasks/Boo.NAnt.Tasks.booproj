@@ -8,7 +8,8 @@
     <RootNamespace>Boo.NAnt.Tasks</RootNamespace>
     <AssemblyName>Boo.NAnt.Tasks</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -28,7 +29,6 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Boo.Lang.Useful" />
     <Reference Include="NAnt.Core">
       <HintPath>..\..\..\..\nant\nant-0.92\bin\NAnt.Core.dll</HintPath>
     </Reference>
@@ -49,6 +49,8 @@
     <Compile Include="AbstractBooTask.boo" />
     <Compile Include="AssemblyInfo.boo" />
     <Compile Include="BoocTask.boo" />
+    <Compile Include="BooIncludeCollection.boo" />
+    <Compile Include="BooScriptInclude.boo" />
     <Compile Include="BooTask.boo" />
     <Compile Include="InsertLicenseTask.boo" />
     <Compile Include="UpdateAssemblyVersionTask.boo" />
@@ -57,6 +59,10 @@
     <ProjectReference Include="..\Boo.Lang.Compiler\Boo.Lang.Compiler.csproj">
       <Project>{7EAC855C-AB70-4CEB-9B9A-8B60712277E2}</Project>
       <Name>Boo.Lang.Compiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Boo.Lang.Useful\Boo.Lang.Useful.booproj">
+      <Project>{C7CA440B-2A76-420D-8B0E-5E5C1676F451}</Project>
+      <Name>Boo.Lang.Useful</Name>
     </ProjectReference>
     <ProjectReference Include="..\Boo.Lang\Boo.Lang.csproj">
       <Project>{A359E52E-5E90-40F3-A5F0-257FE2D545EE}</Project>

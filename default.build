@@ -249,9 +249,17 @@
 		</if>
 
 		<boo>
-		print("Hello from boo task!")		
-		print("Framework directory: ${Project.TargetFramework.FrameworkAssemblyDirectory}")
+			<include path="${project::get-base-directory()}\tests\boo_nant_include_helloworld.boo" />
+			<code>
+				print("Hello from boo task!")		
+				print("Framework directory: ${Project.TargetFramework.FrameworkAssemblyDirectory}")
+				included_method()
+				i = included_class()
+				i.say_hello()
+			</code>
 		</boo>
+		
+		<boo src="D:\boo\webconfig-test.boo" libdirs="D:\temp\boo-lib" />
 
 	</target>
 	
