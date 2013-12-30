@@ -328,6 +328,28 @@
 		</exec>
 		
 		<loadtasks assembly="${build.dir}/Boo.NAnt.Tasks.dll" />
+		
+		<mkdir dir="${build.dir}/boo-nant-tasks/bin/extensions/common/neutral/Boo" />
+		<mkdir dir="${build.dir}/boo-nant-tasks/bin/lib/common/neutral/Boo" />
+		
+		<copy todir="${build.dir}/boo-nant-tasks/bin/extensions/common/neutral/Boo">
+			<fileset basedir="${build.dir}">
+				<include name="Boo.NAnt.Tasks.dll" />
+				<include name="Boo.NAnt.Tasks.pdb" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/boo-nant-tasks/bin/lib/common/neutral/Boo">
+			<fileset basedir="${build.dir}">
+				<include name="*.dll" />
+				<include name="*.pdb" />
+				<include name="*.exe" />
+				<include name="*.config" />
+				<exclude name="Boo.NAnt.Tasks.dll" />
+				<exclude name="Boo.NAnt.Tasks.pdb" />
+			</fileset>
+		</copy>
+		
 	</target>
 	
 	<target name="booc" depends="corecs">
